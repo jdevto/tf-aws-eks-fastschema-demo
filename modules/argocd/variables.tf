@@ -1,12 +1,12 @@
 variable "namespace" {
   type    = string
-  default = "grafana"
+  default = "argocd"
 }
 
 variable "chart_version" {
   type        = string
-  default     = "0.1.2"
-  description = "Version of the k8sforge/grafana-chart Helm chart"
+  default     = "0.1.4"
+  description = "Version of the k8sforge/argocd-chart Helm chart"
 }
 
 variable "aws_region" {
@@ -25,7 +25,7 @@ variable "subnet_ids" {
 variable "enable_https" {
   type        = bool
   default     = false
-  description = "Enable HTTPS for Grafana ingress using ACM certificate. If true, requires certificate_arn."
+  description = "Enable HTTPS for ArgoCD ingress using ACM certificate. If true, requires certificate_arn."
 }
 
 variable "ssl_redirect" {
@@ -48,7 +48,7 @@ variable "shared_alb_ingress_group_name" {
 
 variable "domain_name" {
   type        = string
-  description = "Domain name for Grafana (e.g., dev.geonet.cloud). Used to construct the full URL."
+  description = "Domain name for ArgoCD (e.g., dev.geonet.cloud). Used to construct the full URL."
 }
 
 variable "shared_alb_security_group_id" {
@@ -57,8 +57,8 @@ variable "shared_alb_security_group_id" {
   description = "Security group ID for shared ALB with IP restrictions. Empty if IP restrictions are not configured."
 }
 
-variable "grafana_path_prefix" {
+variable "argocd_path_prefix" {
   type        = string
-  default     = "/grafana"
-  description = "Path prefix for Grafana (e.g., /grafana). Used for ingress paths and health checks."
+  default     = "/argocd"
+  description = "Path prefix for ArgoCD (e.g., /argocd). Used for ingress paths and health checks."
 }

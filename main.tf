@@ -38,6 +38,11 @@ module "route53_platform" {
   domain_name  = var.domain_name
   alb_dns_name = module.eks.shared_alb_dns_name
   alb_zone_id  = module.eks.shared_alb_zone_id
+
+  depends_on = [
+    module.eks,
+    module.vpc
+  ]
 }
 
 module "landing_page" {
@@ -51,7 +56,7 @@ module "landing_page" {
   enable_https                  = var.enable_https
   certificate_arn               = var.enable_https ? var.certificate_arn : ""
   ssl_redirect                  = var.enable_https
-  grafana_path_prefix           = "/grafana"
+  fastschema_path_prefix        = "/fastschema"
 
   depends_on = [
     module.eks,
@@ -59,21 +64,41 @@ module "landing_page" {
   ]
 }
 
-# module "grafana" {
-#   source = "./modules/grafana"
+module "argocd" {
+  source = "./modules/argocd"
 
-#   aws_region                    = var.region
-#   cluster_name                  = module.eks.cluster_name
-#   subnet_ids                    = module.vpc.public_subnet_ids
-#   enable_https                  = var.enable_https
-#   certificate_arn               = var.certificate_arn
-#   ssl_redirect                  = var.enable_https
-#   shared_alb_ingress_group_name = module.eks.shared_alb_ingress_group_name
-#   shared_alb_security_group_id  = module.eks.shared_alb_security_group_id
-#   domain_name                   = var.domain_name
+  aws_region                    = var.region
+  cluster_name                  = module.eks.cluster_name
+  subnet_ids                    = module.vpc.public_subnet_ids
+  enable_https                  = var.enable_https
+  certificate_arn               = var.certificate_arn
+  ssl_redirect                  = var.enable_https
+  shared_alb_ingress_group_name = module.eks.shared_alb_ingress_group_name
+  shared_alb_security_group_id  = module.eks.shared_alb_security_group_id
+  domain_name                   = var.domain_name
 
-#   depends_on = [
-#     module.eks,
-#     module.vpc
-#   ]
-# }
+  depends_on = [
+    module.eks,
+    module.vpc
+  ]
+}
+
+module "fastschema" {
+  source = "./modules/fastschema"
+
+  aws_region      = var.region
+  cluster_name    = module.eks.cluster_name
+  subnet_ids      = module.vpc.public_subnet_ids
+  enable_https    = var.enable_https
+  certificate_arn = var.certificate_arn
+  ssl_redirect    = var.enable_https
+  domain_name     = var.domain_name
+  # No path prefix - FastSchema runs at root on dedicated ALB
+  argocd_namespace = module.argocd.argocd_namespace
+
+  depends_on = [
+    module.eks,
+    module.vpc,
+    module.argocd
+  ]
+}

@@ -10,7 +10,8 @@ resource "kubernetes_config_map" "landing_page" {
   data = merge(
     {
       "index.html" = templatefile("${path.module}/templates/landing-page.html", {
-        grafana_path_prefix = var.grafana_path_prefix
+        argocd_path_prefix     = var.argocd_path_prefix
+        fastschema_path_prefix = var.fastschema_path_prefix
       })
     },
     {
@@ -18,6 +19,7 @@ resource "kubernetes_config_map" "landing_page" {
     }
   )
 }
+
 resource "kubernetes_deployment" "landing_page" {
   metadata {
     name      = "landing-page"

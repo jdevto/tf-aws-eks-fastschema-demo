@@ -38,22 +38,16 @@ variable "shared_alb_security_group_id" {
   description = "Security group ID for shared ALB with IP restrictions. If provided, will be attached to the ALB."
 }
 
-variable "grafana_path_prefix" {
+variable "argocd_path_prefix" {
   type        = string
-  default     = "/grafana"
-  description = "Path prefix for Grafana links in the landing page"
+  default     = "/argocd"
+  description = "Path prefix for ArgoCD links in the landing page"
 }
 
-variable "atlantis_path_prefix" {
+variable "fastschema_path_prefix" {
   type        = string
-  default     = "/atlantis"
-  description = "Path prefix for Atlantis links in the landing page"
-}
-
-variable "bitwarden_reader_path_prefix" {
-  type        = string
-  default     = "/reader"
-  description = "Path prefix for Bitwarden Reader links in the landing page"
+  default     = "/fastschema"
+  description = "Path prefix for FastSchema links in the landing page"
 }
 
 variable "favicon_path" {
